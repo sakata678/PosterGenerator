@@ -89,10 +89,21 @@ header p {
     resize: vertical;
 }
 
+.content-section {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid #e6f7f5;
+}
+
+.content-section h3 {
+    color: #2c5b7a;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
 .properties-section {
-    margin-top: 40px;
-    padding-top: 30px;
-    border-top: 2px solid #e6f7f5;
+    margin-top: 0px;
+    padding-top: 10px;
 }
 
 .properties-section h3 {
