@@ -31,6 +31,13 @@ class PosterDesignApp {
                 this.saveFormData();
             });
         });
+        
+        // スタイル選択の自動保存
+        document.querySelectorAll('input[name="poster-style"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                this.saveFormData();
+            });
+        });
     }
     
     showScreen(screenName) {
@@ -45,10 +52,13 @@ class PosterDesignApp {
     }
     
     saveFormData() {
+        const selectedStyle = document.querySelector('input[name="poster-style"]:checked');
+        
         this.formData = {
             mainContent: document.getElementById('main-content').value,
             title: document.getElementById('title').value,
-            printSize: document.getElementById('print-size').value
+            printSize: document.getElementById('print-size').value,
+            style: selectedStyle ? selectedStyle.value : 'classic'
         };
         
         // セッションストレージに保存
@@ -64,6 +74,13 @@ class PosterDesignApp {
             document.getElementById('main-content').value = this.formData.mainContent || '';
             document.getElementById('title').value = this.formData.title || '';
             document.getElementById('print-size').value = this.formData.printSize || 'a4';
+            
+            // スタイル選択を復元
+            const styleValue = this.formData.style || 'classic';
+            const styleRadio = document.getElementById(`style-${styleValue}`);
+            if (styleRadio) {
+                styleRadio.checked = true;
+            }
         }
     }
     
