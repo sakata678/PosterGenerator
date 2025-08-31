@@ -287,168 +287,20 @@ class PosterDesignApp {
         previewElement.innerHTML = `<div style="color: #e74c3c; text-align: center;">${message}</div>`;
     }
     
-    async handlePrint() {
+    handlePrint() {
         if (!this.generatedPosterUrl) {
             alert('印刷するポスターがありません。');
             return;
         }
         
+        // 印刷用のページサイズを設定
         const printSize = this.formData.printSize || 'a4';
+        this.setPrintPageSize(printSize);
         
-        try {
-            // PDFを生成
-            const pdfUrl = await this.generatePDF(printSize);
-            
-            // PDFを新しいタブで開いて印刷
-            this.printPDF(pdfUrl);
-        } catch (error) {
-            console.error('PDF生成エラー:', error);
-            this.logError('PDF生成', error, { printSize, posterUrl: this.generatedPosterUrl });
-            alert('PDFの生成に失敗しました。');
-        }
+        // ブラウザの印刷ダイアログを開く
+        window.print();
     }
     
-    async generatePDF(printSize) {
-        const { jsPDF } = window.jspdf;
-        
-        // サイズに応じた寸法設定（mm単位）
-        const paperDimensions = {
-            a5: { width: 148, height: 210 },
-            a4: { width: 210, height: 297 },
-            a3: { width: 297, height: 420 },
-            b4: { width: 257, height: 364 },
-            b3: { width: 364, height: 515 }
-        };
-        
-        const dimensions = paperDimensions[printSize] || paperDimensions.a4;
-        const orientation = dimensions.width > dimensions.height ? 'landscape' : 'portrait';
-        
-        // PDFドキュメントを作成
-        const pdf = new jsPDF({
-            orientation: orientation,
-            unit: 'mm',
-            format: [dimensions.width, dimensions.height]
-        });
-        
-        // ポスター画像をPDFに追加
-        const previewElement = document.getElementById('poster-preview');
-        const posterImage = previewElement.querySelector('img');
-        
-        if (posterImage) {
-            try {
-                // SVG画像の場合は特別な処理が必要
-                if (posterImage.src.startsWith('blob:') && this.generatedPosterUrl.includes('svg')) {
-                    // SVGをキャンバスに変換してからPDFに追加
-                    const canvas = await this.svgToCanvas(posterImage.src);
-                    const imgData = canvas.toDataURL('image/png', 1.0);
-                    
-                    const imgWidth = dimensions.width;
-                    const imgHeight = dimensions.height;
-                    
-                    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                } else {
-                    // 通常の画像処理
-                    await new Promise((resolve, reject) => {
-                        const img = new Image();
-                        img.crossOrigin = 'anonymous';
-                        img.onload = () => {
-                            try {
-                                const canvas = document.createElement('canvas');
-                                const ctx = canvas.getContext('2d');
-                                
-                                canvas.width = img.width;
-                                canvas.height = img.height;
-                                ctx.drawImage(img, 0, 0);
-                                
-                                const imgData = canvas.toDataURL('image/png', 1.0);
-                                const imgWidth = dimensions.width;
-                                const imgHeight = dimensions.height;
-                                
-                                pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-                                resolve();
-                            } catch (error) {
-                                reject(error);
-                            }
-                        };
-                        img.onerror = reject;
-                        img.src = posterImage.src;
-                    });
-                }
-            } catch (error) {
-                console.error('画像処理エラー:', error);
-                // エラーの場合はテキストでフォールバック
-                this.addTextToPDF(pdf, dimensions);
-            }
-        } else {
-            // 画像がない場合はテキストでフォールバック
-            this.addTextToPDF(pdf, dimensions);
-        }
-        
-        // PDFをBlobとして生成
-        const pdfBlob = pdf.output('blob');
-        const pdfUrl = URL.createObjectURL(pdfBlob);
-        
-        return pdfUrl;
-    }
-    
-    async svgToCanvas(svgUrl) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const response = await fetch(svgUrl);
-                const svgText = await response.text();
-                
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const img = new Image();
-                
-                img.onload = () => {
-                    canvas.width = img.width || 400;
-                    canvas.height = img.height || 600;
-                    ctx.drawImage(img, 0, 0);
-                    resolve(canvas);
-                };
-                
-                img.onerror = reject;
-                
-                const svgBlob = new Blob([svgText], { type: 'image/svg+xml' });
-                const url = URL.createObjectURL(svgBlob);
-                img.src = url;
-            } catch (error) {
-                reject(error);
-            }
-        });
-    }
-    
-    addTextToPDF(pdf, dimensions) {
-        // フォールバック：テキストベースでポスター内容を追加
-        pdf.setFontSize(20);
-        pdf.text(this.formData.title || 'ポスタータイトル', 20, 30);
-        
-        pdf.setFontSize(12);
-        const content = this.formData.mainContent || 'ポスターコンテンツ';
-        const lines = pdf.splitTextToSize(content, dimensions.width - 40);
-        pdf.text(lines, 20, 50);
-    }
-    
-    printPDF(pdfUrl) {
-        // 新しいウィンドウでPDFを開く
-        const printWindow = window.open(pdfUrl, '_blank');
-        
-        // PDFが読み込まれたら印刷ダイアログを開く
-        if (printWindow) {
-            printWindow.onload = () => {
-                setTimeout(() => {
-                    printWindow.print();
-                }, 500);
-            };
-        } else {
-            // ポップアップがブロックされた場合は直接ダウンロード
-            const link = document.createElement('a');
-            link.href = pdfUrl;
-            link.download = `poster_${this.formData.printSize || 'a4'}.pdf`;
-            link.click();
-        }
-    }
     
     setPrintPageSize(size) {
         // 既存のスタイルタグを削除
