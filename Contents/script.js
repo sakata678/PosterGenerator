@@ -269,8 +269,28 @@ class PosterDesignApp {
         if (result.success && result.imageUrl) {
             this.generatedPosterUrl = result.imageUrl;
             previewElement.innerHTML = `<img src="${result.imageUrl}" alt="生成されたポスター">`;
+            
+            // スタイルに応じたタイトルに変更
+            this.updateResultTitle();
         } else {
             this.showError('ポスターの生成に失敗しました。');
+        }
+    }
+    
+    updateResultTitle() {
+        const titleMapping = {
+            'classic': '生成完了',
+            'art': '作品が完成しました',
+            'child': 'できあがり！',
+            'pop': 'できたよ！'
+        };
+        
+        const selectedStyle = this.formData.style || 'classic';
+        const newTitle = titleMapping[selectedStyle] || '生成結果';
+        
+        const titleElement = document.querySelector('#output-screen header h1');
+        if (titleElement) {
+            titleElement.textContent = newTitle;
         }
     }
     
