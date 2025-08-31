@@ -9,7 +9,7 @@ env:
   MY_AWS_REGION: 'ap-northeast-1'
   AWS_ROLENAME: 'S3Commit'
   AWS_S3_BUCKET: 'poster-design-portfolio'
-  SOURCE_DIR: '.'
+  SOURCE_DIR: './Contents'
 
 jobs:
   deploy:
