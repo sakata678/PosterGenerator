@@ -10,7 +10,7 @@ env:
   AWS_ROLENAME: 'S3Commit'
   AWS_S3_BUCKET: 'poster-design-portfolio'
   SOURCE_DIR: '.'
-  DEST_DIR: 'dir'
+  DEST_DIR: ''
 
 jobs:
   deploy:
