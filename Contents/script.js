@@ -3,6 +3,7 @@ class PosterDesignApp {
         this.currentScreen = 'input';
         this.formData = {};
         this.generatedPosterUrl = null;
+        this.errorLogs = [];
         
         this.initializeEventListeners();
         this.loadSavedData();
@@ -118,6 +119,7 @@ class PosterDesignApp {
             this.displayGeneratedPoster(result);
         } catch (error) {
             console.error('ポスター生成エラー:', error);
+            this.logError('ポスター生成API呼び出し', error, this.formData);
             this.showError('ポスターの生成に失敗しました。もう一度お試しください。');
         } finally {
             this.showLoading(false);
@@ -185,6 +187,81 @@ class PosterDesignApp {
         return sizeMap[printSize] || sizeMap['a4'];
     }
     
+    logError(operation, error, context = {}) {
+        const timestamp = new Date().toISOString();
+        const errorLog = {
+            timestamp: timestamp,
+            operation: operation,
+            error: {
+                name: error.name || 'Unknown Error',
+                message: error.message || 'No error message',
+                stack: error.stack || 'No stack trace'
+            },
+            context: context,
+            userAgent: navigator.userAgent,
+            url: window.location.href
+        };
+        
+        // エラーログを配列に追加
+        this.errorLogs.push(errorLog);
+        
+        // ローカルストレージに保存（永続化）
+        try {
+            const existingLogs = JSON.parse(localStorage.getItem('posterAppErrorLogs') || '[]');
+            existingLogs.push(errorLog);
+            
+            // 最新100件のみ保持
+            if (existingLogs.length > 100) {
+                existingLogs.splice(0, existingLogs.length - 100);
+            }
+            
+            localStorage.setItem('posterAppErrorLogs', JSON.stringify(existingLogs));
+        } catch (storageError) {
+            console.error('Error saving to localStorage:', storageError);
+        }
+        
+        // コンソールにも詳細なエラー情報を出力
+        console.group(`🚨 ${operation} - ${timestamp}`);
+        console.error('Error Details:', error);
+        console.log('Context:', context);
+        console.log('Full Error Log:', errorLog);
+        console.groupEnd();
+        
+        // エラーログファイルとしてダウンロード可能にする
+        this.generateErrorLogFile();
+    }
+    
+    generateErrorLogFile() {
+        try {
+            const allLogs = JSON.parse(localStorage.getItem('posterAppErrorLogs') || '[]');
+            const logContent = allLogs.map(log => {
+                return `[${log.timestamp}] ${log.operation}\n` +
+                       `Error: ${log.error.name} - ${log.error.message}\n` +
+                       `Context: ${JSON.stringify(log.context, null, 2)}\n` +
+                       `User Agent: ${log.userAgent}\n` +
+                       `URL: ${log.url}\n` +
+                       `Stack Trace: ${log.error.stack}\n` +
+                       '---\n';
+            }).join('\n');
+            
+            // Blobを作成してダウンロード用URLを生成
+            const blob = new Blob([logContent], { type: 'text/plain' });
+            const logUrl = URL.createObjectURL(blob);
+            
+            // ダウンロードリンクを動的に作成（デバッグ用）
+            if (window.downloadErrorLogs) {
+                URL.revokeObjectURL(window.downloadErrorLogs);
+            }
+            window.downloadErrorLogs = logUrl;
+            
+            // コンソールにダウンロード可能であることを通知
+            console.log('📄 Error log file generated. Access via: window.downloadErrorLogs');
+            console.log('🔽 To download: const a = document.createElement("a"); a.href = window.downloadErrorLogs; a.download = "poster-app-errors.log"; a.click();');
+            
+        } catch (error) {
+            console.error('Failed to generate error log file:', error);
+        }
+    }
     
     displayGeneratedPoster(result) {
         const previewElement = document.getElementById('poster-preview');
@@ -226,6 +303,7 @@ class PosterDesignApp {
             this.printPDF(pdfUrl);
         } catch (error) {
             console.error('PDF生成エラー:', error);
+            this.logError('PDF生成', error, { printSize, posterUrl: this.generatedPosterUrl });
             alert('PDFの生成に失敗しました。');
         }
     }
