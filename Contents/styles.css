@@ -91,7 +91,7 @@ header p {
 
 .content-section {
     margin-bottom: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
     border-bottom: 2px solid #e6f7f5;
 }
 
@@ -102,9 +102,9 @@ header p {
 }
 
 .style-section {
-    margin-top: 20px;
+    margin-top: 10px;
     margin-bottom: 20px;
-    padding-top: 20px;
+    padding-top: 10px;
     padding-bottom: 20px;
     border-bottom: 2px solid #e6f7f5;
 }
@@ -188,8 +188,8 @@ header p {
 }
 
 .properties-section {
-    margin-top: 20px;
-    padding-top: 20px;
+    margin-top: 10px;
+    padding-top: 10px;
 }
 
 .properties-section h3 {
