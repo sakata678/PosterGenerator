@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポスターデザイン作成サービス</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 入力画面 -->
+        <div id="input-screen" class="screen active">
+            <header>
+                <h1>ポスターデザイン作成サービス</h1>
+                <p>AIを活用してポスターを自動生成します</p>
+            </header>
+            
+            <main class="input-container">
+                <div class="form-section">
+                    <div class="input-group">
+                        <label for="main-content">メインコンテンツ</label>
+                        <textarea id="main-content" placeholder="ポスターの主要内容を入力してください"></textarea>
+                    </div>
+                    
+                    <div class="properties-section">
+                        <h3>プロパティ設定</h3>
+                        
+                        <div class="input-group">
+                            <label for="title">タイトル</label>
+                            <input type="text" id="title" placeholder="ポスターのタイトルを入力">
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="print-size">印刷サイズ</label>
+                            <select id="print-size">
+                                <option value="a5">A5 (148×210mm)</option>
+                                <option value="a4">A4 (210×297mm)</option>
+                                <option value="a3">A3 (297×420mm)</option>
+                                <option value="b4">B4 (257×364mm)</option>
+                                <option value="b3">B3 (364×515mm)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button id="generate-btn" class="primary-btn">出力する</button>
+                </div>
+            </main>
+        </div>
+        
+        <!-- 出力・編集画面 -->
+        <div id="output-screen" class="screen">
+            <header>
+                <h1>生成結果</h1>
+            </header>
+            
+            <main class="output-container">
+                <div class="preview-section">
+                    <div id="poster-preview" class="poster-preview">
+                        <div class="loading">生成中...</div>
+                    </div>
+                </div>
+                
+                <div class="actions-section">
+                    <button id="regenerate-btn" class="secondary-btn">再生成する</button>
+                    <button id="print-btn" class="primary-btn">印刷する</button>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

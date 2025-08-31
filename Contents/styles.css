@@ -1,0 +1,254 @@
+/* リセット・基本設定 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    background-color: #e6f7f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* レイアウト・画面切り替え */
+.screen {
+    display: none;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* ヘッダー */
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    color: #2c5b7a;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    color: #5a7a8a;
+    font-size: 1.1rem;
+}
+
+/* 入力画面 */
+.input-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.form-section {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(44, 91, 122, 0.1);
+}
+
+.input-group {
+    margin-bottom: 25px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c5b7a;
+    font-weight: 600;
+}
+
+.input-group textarea,
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #b8e6e1;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+    background-color: #f9fdfc;
+}
+
+.input-group textarea:focus,
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: #4a9d94;
+    box-shadow: 0 0 0 3px rgba(74, 157, 148, 0.1);
+}
+
+.input-group textarea {
+    height: 120px;
+    resize: vertical;
+}
+
+.properties-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #e6f7f5;
+}
+
+.properties-section h3 {
+    color: #2c5b7a;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+}
+
+/* ボタンスタイル */
+.primary-btn,
+.secondary-btn {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 10px 5px;
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, #4a9d94, #2c5b7a);
+    color: white;
+}
+
+.primary-btn:hover {
+    background: linear-gradient(135deg, #3a8d84, #1c4b6a);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(44, 91, 122, 0.3);
+}
+
+.secondary-btn {
+    background: white;
+    color: #4a9d94;
+    border: 2px solid #4a9d94;
+}
+
+.secondary-btn:hover {
+    background: #4a9d94;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(74, 157, 148, 0.3);
+}
+
+#generate-btn {
+    width: 100%;
+    margin-top: 30px;
+    font-size: 18px;
+    padding: 20px;
+}
+
+/* 出力画面 */
+.output-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.preview-section {
+    flex: 1;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(44, 91, 122, 0.1);
+}
+
+.poster-preview {
+    width: 100%;
+    min-height: 600px;
+    border: 3px dashed #b8e6e1;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f9fdfc;
+    position: relative;
+}
+
+.poster-preview .loading {
+    color: #5a7a8a;
+    font-size: 1.2rem;
+}
+
+.poster-preview img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.actions-section {
+    flex: 0 0 250px;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(44, 91, 122, 0.1);
+    height: fit-content;
+}
+
+.actions-section button {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    .form-section {
+        padding: 20px;
+    }
+    
+    .output-container {
+        flex-direction: column;
+    }
+    
+    .actions-section {
+        flex: none;
+        width: 100%;
+    }
+    
+    .actions-section button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* 印刷用スタイル */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    
+    .poster-preview,
+    .poster-preview * {
+        visibility: visible;
+    }
+    
+    .poster-preview {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100% !important;
+        height: 100% !important;
+        border: none;
+        background: white;
+    }
+    
+    .poster-preview img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: fill;
+    }
+}
