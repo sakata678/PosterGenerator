@@ -132,8 +132,8 @@ class PosterDesignApp {
         // 印刷サイズをピクセルに変換
         const sizeMapping = this.getSizeInPixels(formData.printSize);
         
-        // スタイルをトーンに変換
-        const toneMapping = {
+        // スタイルをAPIパラメータに変換
+        const styleMapping = {
             'classic': 'フォーマル',
             'art': 'アート',
             'child': 'ファミリー',
@@ -143,7 +143,7 @@ class PosterDesignApp {
         const requestBody = {
             title: formData.title || '',
             subtitle: formData.mainContent || '',
-            tone: toneMapping[formData.style] || 'フォーマル',
+            style: styleMapping[formData.style] || 'フォーマル',
             size: sizeMapping
         };
         
