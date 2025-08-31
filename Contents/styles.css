@@ -353,6 +353,34 @@ header p {
     }
 }
 
+/* ローディングスピナー */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #b8e6e1;
+    border-radius: 50%;
+    border-top-color: #4a9d94;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5a7a8a;
+    font-size: 1.2rem;
+    height: 100%;
+}
+
 /* 印刷用スタイル */
 @media print {
     body * {

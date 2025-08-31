@@ -278,7 +278,12 @@ class PosterDesignApp {
         const previewElement = document.getElementById('poster-preview');
         
         if (show) {
-            previewElement.innerHTML = '<div class="loading">生成中...</div>';
+            previewElement.innerHTML = `
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    生成中...
+                </div>
+            `;
         }
     }
     
